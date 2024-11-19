@@ -34,10 +34,12 @@ pub enum Error {
 
     /// Redis, Sqlx and Anyhow
     /// Return `500 Internal Server Error`
+    #[cfg(feature = "redis")]
     #[allow(dead_code)]
     #[error(transparent)]
     Redis(#[from] redis::RedisError),
 
+    #[cfg(feature = "postgres")]
     #[allow(dead_code)]
     #[error(transparent)]
     Sqlx(#[from] sqlx::Error),
@@ -65,16 +67,25 @@ impl IntoResponse for Error {
                 (json_rejection.status(), json_rejection.body_text())
             }
             Self::ValidationError(_) => (StatusCode::UNPROCESSABLE_ENTITY, self.to_string()),
-            Self::Redis(_) | Self::Sqlx(_) | Self::Anyhow(_) => {
-                tracing::error!("{}", self);
-                (
-                    StatusCode::INTERNAL_SERVER_ERROR,
-                    "Internal Server Error".to_string(),
-                )
-            }
+
+            #[cfg(feature = "redis")]
+            Self::Redis(_) => internal_server_error(self),
+
+            #[cfg(feature = "postgres")]
+            Self::Sqlx(_) => internal_server_error(self),
+
+            Self::Anyhow(_) => internal_server_error(self),
             Self::Custom(statue, _) => (statue, self.to_string()),
         };
 
         (status, Json(ErrorResponse { message })).into_response()
     }
+}
+
+fn internal_server_error<E: std::fmt::Display>(err: E) -> (StatusCode, String) {
+    tracing::error!("{}", err);
+    (
+        StatusCode::INTERNAL_SERVER_ERROR,
+        "Internal Server Error".to_string(),
+    )
 }

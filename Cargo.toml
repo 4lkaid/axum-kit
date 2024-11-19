@@ -4,15 +4,23 @@ version = "0.1.0"
 edition = "2021"
 rust-version = "1.75"
 
+[features]
+default = []
+postgres = ["dep:sqlx"]
+redis = ["dep:redis"]
+
 [dependencies]
 anyhow = "1"
 axum = "0.7"
 chrono = "0.4"
 config = "0.14"
 http-body-util = "0.1"
-redis = { version = "0.27", features = ["tokio-comp"] }
+redis = { version = "0.27", features = ["tokio-comp"], optional = true }
 serde = { version = "1", features = ["derive"] }
-sqlx = { version = "0.8", features = ["postgres", "runtime-tokio-rustls"] }
+sqlx = { version = "0.8", features = [
+    "postgres",
+    "runtime-tokio-rustls",
+], optional = true }
 thiserror = "2"
 tokio = { version = "1", features = ["full"] }
 tower-http = { version = "0.6", features = ["cors", "request-id", "trace"] }

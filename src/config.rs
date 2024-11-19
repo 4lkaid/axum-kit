@@ -1,8 +1,12 @@
-use crate::{
-    general::GeneralConfig, logger::LoggerConfig, postgres::PostgresConfig, redis::RedisConfig,
-};
+use crate::{general::GeneralConfig, logger::LoggerConfig};
 use anyhow::Result;
 use serde::Deserialize;
+
+#[cfg(feature = "postgres")]
+use crate::postgres::PostgresConfig;
+
+#[cfg(feature = "redis")]
+use crate::redis::RedisConfig;
 
 macro_rules! deserialize_with_context {
     ($name:ident, $type:ty, $context:expr) => {
@@ -19,7 +23,11 @@ macro_rules! deserialize_with_context {
 
 deserialize_with_context!(deserialize_general_config, GeneralConfig, "[general]");
 deserialize_with_context!(deserialize_logger_config, LoggerConfig, "[logger]");
+
+#[cfg(feature = "postgres")]
 deserialize_with_context!(deserialize_postgres_config, PostgresConfig, "[postgres]");
+
+#[cfg(feature = "redis")]
 deserialize_with_context!(deserialize_redis_config, RedisConfig, "[redis]");
 
 #[derive(Debug, Deserialize)]
@@ -28,8 +36,12 @@ pub struct Config {
     pub general: GeneralConfig,
     #[serde(deserialize_with = "deserialize_logger_config")]
     pub logger: LoggerConfig,
+
+    #[cfg(feature = "postgres")]
     #[serde(deserialize_with = "deserialize_postgres_config")]
     pub postgres: PostgresConfig,
+
+    #[cfg(feature = "redis")]
     #[serde(deserialize_with = "deserialize_redis_config")]
     pub redis: RedisConfig,
 }

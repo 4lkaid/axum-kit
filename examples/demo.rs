@@ -3,6 +3,9 @@
 //! ```not_rust
 //! sqlx database create
 //! sqlx migrate run --source ./examples
+//! # With optional features
+//! cargo run --example demo --features postgres,redis
+//! # Or without features
 //! cargo run --example demo
 //! ```
 //!
@@ -14,11 +17,19 @@
 //! ```
 
 mod handler {
-    use ::redis::AsyncCommands;
     use axum::extract::Json;
-    use axum_kit::{postgres, redis, validation::ValidatedJson, AppResult};
+    use axum_kit::{validation::ValidatedJson, AppResult};
     use serde::{Deserialize, Serialize};
     use validator::Validate;
+
+    #[cfg(feature = "postgres")]
+    use axum_kit::postgres;
+
+    #[cfg(feature = "redis")]
+    use ::redis::AsyncCommands;
+
+    #[cfg(feature = "redis")]
+    use axum_kit::redis;
 
     #[derive(Deserialize, Validate)]
     pub struct CreateUser {
@@ -32,13 +43,22 @@ mod handler {
         pub username: String,
     }
 
+    #[cfg(feature = "redis")]
     pub async fn root() -> AppResult<String> {
         let mut con = redis::conn().await?;
-        let _: () = con.set_ex("greeting", "Hello, AXUM-KIT!", 10).await?;
+        let _: () = con
+            .set_ex("greeting", "Hello, Axum-kit with Redis!", 10)
+            .await?;
         let result: String = con.get("greeting").await?;
         Ok(result)
     }
 
+    #[cfg(not(feature = "redis"))]
+    pub async fn root() -> AppResult<String> {
+        Ok("Hello, Axum-kit without Redis!".to_string())
+    }
+
+    #[cfg(feature = "postgres")]
     pub async fn create_user(
         ValidatedJson(payload): ValidatedJson<CreateUser>,
     ) -> AppResult<Json<User>> {
@@ -49,6 +69,17 @@ mod handler {
         )
         .fetch_one(postgres::conn())
         .await?;
+        Ok(Json(user))
+    }
+
+    #[cfg(not(feature = "postgres"))]
+    pub async fn create_user(
+        ValidatedJson(payload): ValidatedJson<CreateUser>,
+    ) -> AppResult<Json<User>> {
+        let user = User {
+            id: 9527,
+            username: payload.username,
+        };
         Ok(Json(user))
     }
 }
@@ -85,10 +116,19 @@ use anyhow::{Context, Result};
 #[tokio::main]
 async fn main() -> Result<()> {
     let config = axum_kit::config::load_config().with_context(|| "configuration parsing failed")?;
-    axum_kit::postgres::init(&config.postgres).await?;
-    axum_kit::redis::init(&config.redis).await?;
+
+    #[cfg(feature = "postgres")]
+    axum_kit::postgres::init(&config.postgres)
+        .await
+        .with_context(|| "postgres initialization failed")?;
+
+    #[cfg(feature = "redis")]
+    axum_kit::redis::init(&config.redis)
+        .await
+        .with_context(|| "redis initialization failed")?;
+
     let _worker_guard =
-        axum_kit::logger::init(&config.logger).with_context(|| "initialization failed")?;
+        axum_kit::logger::init(&config.logger).with_context(|| "logger initialization failed")?;
     let router = route::init();
     axum_kit::general::serve(&config.general, router)
         .await
