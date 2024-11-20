@@ -33,6 +33,8 @@ jobs:
         DATABASE_URL: postgres://postgres:password@localhost:5432/axum_kit
       run: sqlx migrate run --source ./examples
     - name: Run cargo clippy
+      env:
+        DATABASE_URL: postgres://postgres:password@localhost:5432/axum_kit
       run: cargo clippy --all-targets --all-features -- -D warnings
     - name: Run Rust formatting checks
       run: cargo fmt --all --check
