@@ -12,9 +12,27 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_PASSWORD: password
+        ports:
+          - 5432:5432
+
     steps:
     - uses: actions/checkout@v4
+    - name: Install SQLx-CLI
+      run: cargo install sqlx-cli
+    - name: Create database
+      env:
+        DATABASE_URL: postgres://postgres:password@localhost:5432/axum_kit
+      run: sqlx database create
+    - name: Run migrations
+      env:
+        DATABASE_URL: postgres://postgres:password@localhost:5432/axum_kit
+      run: sqlx migrate run --source ./examples
     - name: Run cargo clippy
-      run: cargo clippy --all-features -- -D warnings
+      run: cargo clippy --all-targets --all-features -- -D warnings
     - name: Run Rust formatting checks
       run: cargo fmt --all --check
