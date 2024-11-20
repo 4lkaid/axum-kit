@@ -1,6 +1,6 @@
 [package]
 name = "axum-kit"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 rust-version = "1.75"
 license = "MIT"
@@ -8,6 +8,7 @@ description = "Streamline the integration and usage of Axum with SQLx and Redis"
 homepage = "https://github.com/4lkaid/axum-kit"
 repository = "https://github.com/4lkaid/axum-kit"
 readme = "README.md"
+exclude = ["examples/*"]
 
 [features]
 default = []
