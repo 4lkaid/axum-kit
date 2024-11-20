@@ -10,7 +10,7 @@ To use `axum-kit`, add the following to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-axum-kit = { git = "https://github.com/4lkaid/axum-kit.git" }
+axum-kit = { git = "https://github.com/4lkaid/axum-kit.git", tag = "v0.1.0" }
 ```
 
 ## Example Configuration File
