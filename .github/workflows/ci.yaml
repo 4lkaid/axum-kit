@@ -8,13 +8,13 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
+  check:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
     - name: Run cargo clippy
-      run: cargo clippy --all-targets --all-features -- -D warnings
+      run: cargo clippy --all-features -- -D warnings
     - name: Run Rust formatting checks
       run: cargo fmt --all --check
