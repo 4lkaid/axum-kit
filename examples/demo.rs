@@ -43,44 +43,42 @@ mod handler {
         pub username: String,
     }
 
-    #[cfg(feature = "redis")]
     pub async fn root() -> AppResult<String> {
-        let mut con = redis::conn().await?;
-        let _: () = con
-            .set_ex("greeting", "Hello, Axum-kit with Redis!", 10)
-            .await?;
-        let result: String = con.get("greeting").await?;
-        Ok(result)
-    }
-
-    #[cfg(not(feature = "redis"))]
-    pub async fn root() -> AppResult<String> {
+        #[cfg(feature = "redis")]
+        {
+            let mut con = redis::conn().await?;
+            let _: () = con
+                .set_ex("greeting", "Hello, Axum-kit with Redis!", 10)
+                .await?;
+            let result: String = con.get("greeting").await?;
+            Ok(result)
+        }
+        #[cfg(not(feature = "redis"))]
         Ok("Hello, Axum-kit without Redis!".to_string())
     }
 
-    #[cfg(feature = "postgres")]
     pub async fn create_user(
         ValidatedJson(payload): ValidatedJson<CreateUser>,
     ) -> AppResult<Json<User>> {
-        let user = sqlx::query_as!(
-            User,
-            r#"insert into users (username) values ($1) returning id, username"#,
-            payload.username
-        )
-        .fetch_one(postgres::conn())
-        .await?;
-        Ok(Json(user))
-    }
-
-    #[cfg(not(feature = "postgres"))]
-    pub async fn create_user(
-        ValidatedJson(payload): ValidatedJson<CreateUser>,
-    ) -> AppResult<Json<User>> {
-        let user = User {
-            id: 9527,
-            username: payload.username,
-        };
-        Ok(Json(user))
+        #[cfg(feature = "postgres")]
+        {
+            let user = sqlx::query_as!(
+                User,
+                r#"insert into users (username) values ($1) returning id, username"#,
+                payload.username
+            )
+            .fetch_one(postgres::conn())
+            .await?;
+            Ok(Json(user))
+        }
+        #[cfg(not(feature = "postgres"))]
+        {
+            let user = User {
+                id: 9527,
+                username: payload.username,
+            };
+            Ok(Json(user))
+        }
     }
 }
 
