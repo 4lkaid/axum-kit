@@ -1,6 +1,6 @@
 [package]
 name = "axum-kit"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 rust-version = "1.75"
 license = "MIT"
@@ -8,11 +8,11 @@ description = "Streamline the integration and usage of Axum with SQLx and Redis"
 homepage = "https://github.com/4lkaid/axum-kit"
 repository = "https://github.com/4lkaid/axum-kit"
 readme = "README.md"
-exclude = ["examples/*"]
+exclude = ["examples/*", ".github/*"]
 
 [features]
 default = []
-postgres = ["dep:sqlx"]
+postgres = ["dep:sqlx", "dep:iana-time-zone"]
 redis = ["dep:redis"]
 
 [dependencies]
@@ -21,6 +21,7 @@ axum = "0.7"
 chrono = "0.4"
 config = "0.14"
 http-body-util = "0.1"
+iana-time-zone = { version = "0.1", optional = true }
 redis = { version = "0.27", features = ["tokio-comp"], optional = true }
 serde = { version = "1", features = ["derive"] }
 sqlx = { version = "0.8", features = [

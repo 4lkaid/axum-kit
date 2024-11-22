@@ -14,12 +14,20 @@ pub struct PostgresConfig {
 }
 
 static PG_POOL: OnceLock<PgPool> = OnceLock::new();
+static LOCAL_TIMEZONE: OnceLock<String> = OnceLock::new();
 
 pub async fn init(config: &PostgresConfig) -> Result<()> {
+    let local_timezone = iana_time_zone::get_timezone().unwrap_or_else(|_| "UTC".to_string());
+    LOCAL_TIMEZONE
+        .set(local_timezone)
+        .map_err(|_| anyhow::anyhow!("Failed to set LOCAL_TIMEZONE"))?;
     let pool = PgPoolOptions::new()
         .after_connect(|conn, _meta| {
             Box::pin(async move {
-                conn.execute("SET TIME ZONE 'Asia/Shanghai';").await?;
+                conn.execute(
+                    format!("SET TIME ZONE '{}';", LOCAL_TIMEZONE.get().unwrap()).as_str(),
+                )
+                .await?;
                 Ok(())
             })
         })
