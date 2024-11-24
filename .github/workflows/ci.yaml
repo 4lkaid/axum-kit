@@ -2,14 +2,13 @@ name: GitHub CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
   check:
-
     runs-on: ubuntu-latest
 
     services:
@@ -21,20 +20,20 @@ jobs:
           - 5432:5432
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Install SQLx-CLI
-      run: cargo install sqlx-cli
-    - name: Create database
-      env:
-        DATABASE_URL: postgres://postgres:password@localhost:5432/axum_kit
-      run: sqlx database create
-    - name: Run migrations
-      env:
-        DATABASE_URL: postgres://postgres:password@localhost:5432/axum_kit
-      run: sqlx migrate run --source ./examples
-    - name: Run cargo clippy
-      env:
-        DATABASE_URL: postgres://postgres:password@localhost:5432/axum_kit
-      run: cargo clippy --all-targets --all-features -- -D warnings
-    - name: Run Rust formatting checks
-      run: cargo fmt --all --check
+      - uses: actions/checkout@v4
+      - name: Install SQLx-CLI
+        run: cargo install sqlx-cli
+      - name: Create database
+        env:
+          DATABASE_URL: postgres://postgres:password@localhost:5432/axum_kit
+        run: sqlx database create
+      - name: Run migrations
+        env:
+          DATABASE_URL: postgres://postgres:password@localhost:5432/axum_kit
+        run: sqlx migrate run --source ./examples
+      - name: Run cargo clippy
+        env:
+          DATABASE_URL: postgres://postgres:password@localhost:5432/axum_kit
+        run: cargo clippy --all-targets --all-features -- -D warnings
+      - name: Run Rust formatting checks
+        run: cargo fmt --all --check
