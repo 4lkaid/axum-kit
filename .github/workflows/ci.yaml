@@ -3,6 +3,10 @@ name: GitHub CI
 on:
   push:
     branches: ["main"]
+    paths:
+      - "src/**"
+      - "examples/**"
+      - "Cargo.toml"
 
 env:
   CARGO_TERM_COLOR: always
