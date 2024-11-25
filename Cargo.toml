@@ -11,7 +11,7 @@ readme = "README.md"
 exclude = ["examples/*", ".github/*"]
 
 [features]
-default = ["postgres", "redis"]
+default = []
 postgres = ["dep:sqlx", "dep:iana-time-zone"]
 redis = ["dep:redis"]
 

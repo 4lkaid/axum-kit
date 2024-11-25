@@ -1,6 +1,12 @@
+#[cfg(feature = "postgres")]
+use crate::postgres;
+
+#[cfg(feature = "redis")]
+use crate::redis;
+
 use crate::{
     config::{load_config, Config},
-    general, logger, postgres, redis,
+    general, logger,
 };
 use anyhow::{Context, Result};
 use axum::Router;
