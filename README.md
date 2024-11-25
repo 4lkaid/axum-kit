@@ -14,7 +14,7 @@ To use `axum-kit`, add the following to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-axum-kit = { version = "0.1.2", features = ["postgres", "redis"] }
+axum-kit = "0.2.0"
 ```
 
 ## Example Configuration File

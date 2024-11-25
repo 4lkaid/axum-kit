@@ -109,27 +109,42 @@ mod route {
     }
 }
 
-use anyhow::{Context, Result};
+use anyhow::Result;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let config = axum_kit::config::load_config().with_context(|| "configuration parsing failed")?;
+    // let config = axum_kit::config::load_config().with_context(|| "configuration parsing failed")?;
 
-    #[cfg(feature = "postgres")]
-    axum_kit::postgres::init(&config.postgres)
-        .await
-        .with_context(|| "postgres initialization failed")?;
+    // #[cfg(feature = "postgres")]
+    // axum_kit::postgres::init(&config.postgres)
+    //     .await
+    //     .with_context(|| "postgres initialization failed")?;
 
-    #[cfg(feature = "redis")]
-    axum_kit::redis::init(&config.redis)
-        .await
-        .with_context(|| "redis initialization failed")?;
+    // #[cfg(feature = "redis")]
+    // axum_kit::redis::init(&config.redis)
+    //     .await
+    //     .with_context(|| "redis initialization failed")?;
 
-    let _worker_guard =
-        axum_kit::logger::init(&config.logger).with_context(|| "logger initialization failed")?;
+    // let _worker_guard =
+    //     axum_kit::logger::init(&config.logger).with_context(|| "logger initialization failed")?;
+    // let router = route::init();
+    // axum_kit::general::serve(&config.general, router)
+    //     .await
+    //     .with_context(|| "service startup failed")?;
+    // Ok(())
     let router = route::init();
-    axum_kit::general::serve(&config.general, router)
-        .await
-        .with_context(|| "service startup failed")?;
+
+    // let _worker_guard = axum_kit::bootstrap::Application::new(router)?.run().await?;
+
+    let _worker_guard = axum_kit::bootstrap::Application::new(router)?
+        .before_run(|| {
+            tokio::spawn(async move {
+                println!("Running pre-run initialization tasks...");
+                Ok(())
+            })
+        })
+        .run()
+        .await?;
+
     Ok(())
 }
