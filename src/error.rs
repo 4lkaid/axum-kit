@@ -5,50 +5,45 @@ use thiserror::Error;
 #[derive(Debug, Error)]
 pub enum Error {
     /// Return `401 Unauthorized`
-    #[allow(dead_code)]
     #[error("Unauthorized")]
     Unauthorized,
 
     /// Return `403 Forbidden`
-    #[allow(dead_code)]
     #[error("Forbidden")]
     Forbidden,
 
     /// Return `404 Not Found`
-    #[allow(dead_code)]
     #[error("Not Found")]
     NotFound,
 
     /// Return
-    /// * `400 Bad Request`
-    /// * `415 Unsupported Media Type`
-    /// * `422 Unprocessable Entity`
-    #[allow(dead_code)]
+    /// - `400 Bad Request`
+    /// - `415 Unsupported Media Type`
+    /// - `422 Unprocessable Entity`
     #[error(transparent)]
     JsonExtractorRejection(#[from] JsonRejection),
 
     /// Return `422 Unprocessable Entity`
-    #[allow(dead_code)]
     #[error(transparent)]
     ValidationError(#[from] validator::ValidationErrors),
 
-    /// Redis, Sqlx and Anyhow
     /// Return `500 Internal Server Error`
     #[cfg(feature = "redis")]
-    #[allow(dead_code)]
     #[error(transparent)]
     Redis(#[from] redis::RedisError),
 
+    /// Return
+    /// - `404 Not Found` (Database Record Not Found)
+    /// - `409 Conflict` (Unique Constraint Violation)
+    /// - `500 Internal Server Error`
     #[cfg(feature = "postgres")]
-    #[allow(dead_code)]
     #[error(transparent)]
     Sqlx(#[from] sqlx::Error),
 
-    #[allow(dead_code)]
+    /// Return `500 Internal Server Error`
     #[error(transparent)]
     Anyhow(#[from] anyhow::Error),
 
-    #[allow(dead_code)]
     #[error("{1}")]
     Custom(StatusCode, String),
 }
@@ -72,7 +67,21 @@ impl IntoResponse for Error {
             Self::Redis(_) => internal_server_error(self),
 
             #[cfg(feature = "postgres")]
-            Self::Sqlx(_) => internal_server_error(self),
+            Self::Sqlx(ref error) => match error {
+                sqlx::Error::RowNotFound => (
+                    StatusCode::NOT_FOUND,
+                    "Database Record Not Found".to_string(),
+                ),
+                sqlx::Error::Database(db_error)
+                    if db_error.code().is_some_and(|code| code == "23505") =>
+                {
+                    (
+                        StatusCode::CONFLICT,
+                        "Unique Constraint Violation".to_string(),
+                    )
+                }
+                _ => internal_server_error(self),
+            },
 
             Self::Anyhow(_) => internal_server_error(self),
             Self::Custom(statue, _) => (statue, self.to_string()),
