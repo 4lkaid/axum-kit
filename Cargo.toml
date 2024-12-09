@@ -41,3 +41,6 @@ validator = { version = "0.19", features = ["derive"] }
 
 [dev-dependencies]
 tower = "0.5"
+
+[package.metadata.docs.rs]
+all-features = true
