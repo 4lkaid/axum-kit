@@ -6,7 +6,7 @@
 
 Streamline the integration and usage of [Axum](https://github.com/tokio-rs/axum) with [SQLx](https://github.com/launchbadge/sqlx) and [Redis](https://github.com/redis-rs/redis-rs).
 
-Without further ado, please see the [demo](examples/demo.rs).
+Without further ado, please see the [demo](https://github.com/4lkaid/axum-kit/tree/main/examples).
 
 ## Usage
 
