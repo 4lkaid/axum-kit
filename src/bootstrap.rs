@@ -21,8 +21,16 @@ pub struct Application {
 }
 
 impl Application {
-    pub fn new(router: Router) -> Result<Self> {
-        let config = load_config().with_context(|| "configuration parsing failed")?;
+    pub fn default(config_path: &str, router: Router) -> Result<Self> {
+        let config = load_config(config_path).with_context(|| "configuration parsing failed")?;
+        Ok(Self {
+            config,
+            router,
+            pre_run_fn: None,
+        })
+    }
+
+    pub fn new(config: Config, router: Router) -> Result<Self> {
         Ok(Self {
             config,
             router,

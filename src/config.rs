@@ -46,9 +46,9 @@ pub struct Config {
     pub redis: RedisConfig,
 }
 
-pub fn load_config() -> Result<Config> {
+pub fn load_config(name: &str) -> Result<Config> {
     let config = ::config::Config::builder()
-        .add_source(config::File::with_name("config.toml"))
+        .add_source(config::File::with_name(name))
         .build()?
         .try_deserialize()?;
     Ok(config)
