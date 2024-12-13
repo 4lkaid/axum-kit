@@ -2,15 +2,16 @@ use axum::{
     body::{Body, Bytes},
     extract::Request,
     http::StatusCode,
-    middleware::Next,
-    response::{IntoResponse, Response},
+    middleware::{FromFnLayer, Next},
+    response::Response,
 };
 use http_body_util::BodyExt;
+use std::future::Future;
 
 pub async fn print_request_response(
     req: Request,
     next: Next,
-) -> Result<impl IntoResponse, (StatusCode, String)> {
+) -> Result<Response, (StatusCode, String)> {
     let (parts, body) = req.into_parts();
     let bytes = buffer_and_print("request", body).await?;
     let req = Request::from_parts(parts, Body::from(bytes));
@@ -44,4 +45,31 @@ where
     }
 
     Ok(bytes)
+}
+
+pub trait MyFn<R, N>: Fn(R, N) -> <Self as MyFn<R, N>>::Output {
+    type Output;
+}
+
+impl<F, R, N, Out> MyFn<R, N> for F
+where
+    F: Fn(R, N) -> Out,
+{
+    type Output = Out;
+}
+
+#[allow(clippy::type_complexity)]
+pub fn print() -> FromFnLayer<
+    impl MyFn<
+            Request,
+            Next,
+            Output: Future<Output = Result<Response, (StatusCode, String)>> + Send + 'static,
+        > + Copy
+        + Send
+        + Sync
+        + 'static,
+    (),
+    (Request,),
+> {
+    axum::middleware::from_fn(print_request_response)
 }

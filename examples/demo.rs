@@ -85,7 +85,6 @@ mod handler {
 mod route {
     use crate::handler;
     use axum::{
-        middleware,
         routing::{get, post},
         Router,
     };
@@ -102,9 +101,7 @@ mod route {
                     .layer(request_id::propagate_request_id())
                     .layer(trace::trace())
                     .layer(cors::cors())
-                    .layer(middleware::from_fn(
-                        request_response_logger::print_request_response,
-                    )),
+                    .layer(request_response_logger::print()),
             )
     }
 }
