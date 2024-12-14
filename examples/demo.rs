@@ -88,7 +88,7 @@ mod route {
         routing::{get, post},
         Router,
     };
-    use axum_kit::middleware::{cors, request_id, request_response_logger, trace};
+    use axum_kit::middleware::{cors, request_id, trace, trace_body};
     use tower::ServiceBuilder;
 
     pub fn init() -> Router {
@@ -101,7 +101,7 @@ mod route {
                     .layer(request_id::propagate_request_id())
                     .layer(trace::trace())
                     .layer(cors::cors())
-                    .layer(request_response_logger::print()),
+                    .layer(trace_body::trace_body()),
             )
     }
 }
