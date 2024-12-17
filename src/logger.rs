@@ -1,11 +1,10 @@
 use anyhow::Result;
-use chrono::Local;
 use serde::Deserialize;
 use std::io::Write;
 use tracing::Level;
 use tracing_appender::non_blocking::WorkerGuard;
 use tracing_subscriber::{
-    fmt::{format::Writer, time::FormatTime, writer::MakeWriterExt},
+    fmt::{time::ChronoLocal, writer::MakeWriterExt},
     layer::SubscriberExt,
     util::SubscriberInitExt,
 };
@@ -52,14 +51,6 @@ impl LogLevel {
     }
 }
 
-struct LocalTimer;
-
-impl FormatTime for LocalTimer {
-    fn format_time(&self, w: &mut Writer<'_>) -> std::fmt::Result {
-        write!(w, "{}", Local::now().format("%Y-%m-%d %H:%M:%S"))
-    }
-}
-
 pub fn init(config: &LoggerConfig) -> Result<WorkerGuard> {
     let (writer, ansi): (Box<dyn Write + Send + 'static>, bool) = match config.writer {
         LogWriter::File => (
@@ -75,7 +66,7 @@ pub fn init(config: &LoggerConfig) -> Result<WorkerGuard> {
     let (non_blocking, worker_guard) = tracing_appender::non_blocking(writer);
     let layer = tracing_subscriber::fmt::layer()
         .with_ansi(ansi)
-        .with_timer(LocalTimer)
+        .with_timer(ChronoLocal::new("%Y-%m-%d %H:%M:%S".to_string()))
         .with_writer(non_blocking.with_max_level(config.level.to_tracing_level()));
     tracing_subscriber::registry().with(layer).init();
     Ok(worker_guard)

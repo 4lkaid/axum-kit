@@ -1,6 +1,6 @@
 [package]
 name = "axum-kit"
-version = "0.4.0"
+version = "0.4.1"
 authors = ["4lkaid <4lkaid@gmail.com>"]
 categories = ["web-programming::http-server", "database"]
 keywords = ["axum", "sqlx", "redis"]
@@ -21,7 +21,6 @@ redis = ["dep:redis"]
 [dependencies]
 anyhow = "1"
 axum = "0.7"
-chrono = "0.4"
 config = "0.14"
 futures-util = "0.3"
 http-body-util = "0.1"
@@ -37,8 +36,10 @@ tokio = { version = "1", features = ["full"] }
 tower = "0.5"
 tower-http = { version = "0.6", features = ["cors", "request-id", "trace"] }
 tracing = "0.1"
-tracing-appender = "0.2"
-tracing-subscriber = "0.3"
+tracing-appender = { git = "https://github.com/4lkaid/tracing-appender.git", features = [
+    "local-time",
+] }
+tracing-subscriber = { version = "0.3", features = ["chrono"] }
 validator = { version = "0.19", features = ["derive"] }
 
 [package.metadata.docs.rs]
