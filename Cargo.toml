@@ -36,7 +36,7 @@ tokio = { version = "1", features = ["full"] }
 tower = "0.5"
 tower-http = { version = "0.6", features = ["cors", "request-id", "trace"] }
 tracing = "0.1"
-tracing-appender = { git = "https://github.com/4lkaid/tracing-appender.git", features = [
+tracing-appender = { package = "tracing-appender-plus", version = "0.2", features = [
     "local-time",
 ] }
 tracing-subscriber = { version = "0.3", features = ["chrono"] }
