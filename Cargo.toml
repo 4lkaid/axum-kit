@@ -1,6 +1,6 @@
 [package]
 name = "axum-kit"
-version = "0.4.1"
+version = "0.4.2"
 authors = ["4lkaid <4lkaid@gmail.com>"]
 categories = ["web-programming::http-server", "database"]
 keywords = ["axum", "sqlx", "redis"]
@@ -21,7 +21,7 @@ redis = ["dep:redis"]
 [dependencies]
 anyhow = "1"
 axum = "0.7"
-config = "0.14"
+config = "0.15"
 futures-util = "0.3"
 http-body-util = "0.1"
 iana-time-zone = { version = "0.1", optional = true }
