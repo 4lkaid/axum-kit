@@ -3,6 +3,7 @@
 [![GitHub CI](https://github.com/4lkaid/axum-kit/actions/workflows/ci.yaml/badge.svg)](https://github.com/4lkaid/axum-kit/actions/workflows/ci.yaml)
 [![Crates.io](https://img.shields.io/crates/v/axum-kit)](https://crates.io/crates/axum-kit)
 [![Documentation](https://docs.rs/axum-kit/badge.svg)](https://docs.rs/axum-kit)
+[![Crates.io Total Downloads](https://img.shields.io/crates/d/axum-kit)](https://crates.io/crates/axum-kit)
 
 Streamline the integration and usage of [Axum](https://github.com/tokio-rs/axum) with [SQLx](https://github.com/launchbadge/sqlx) and [Redis](https://github.com/redis-rs/redis-rs).
 
