@@ -88,7 +88,7 @@ mod route {
         routing::{get, post},
         Router,
     };
-    use axum_kit::middleware::{cors, request_id, trace, trace_body};
+    use axum_kit::middleware::{compression, cors, request_id, trace, trace_body};
     use tower::ServiceBuilder;
 
     pub fn init() -> Router {
@@ -97,6 +97,7 @@ mod route {
             .route("/users", post(handler::create_user))
             .layer(
                 ServiceBuilder::new()
+                    .layer(compression::compression())
                     .layer(request_id::set_request_id())
                     .layer(request_id::propagate_request_id())
                     .layer(trace::trace())
