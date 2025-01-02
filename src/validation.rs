@@ -1,6 +1,5 @@
 use crate::error::Error;
 use axum::{
-    async_trait,
     extract::{rejection::JsonRejection, FromRequest, Request},
     Json,
 };
@@ -10,7 +9,6 @@ use validator::Validate;
 #[derive(Debug, Clone, Copy, Default)]
 pub struct ValidatedJson<T>(pub T);
 
-#[async_trait]
 impl<T, S> FromRequest<S> for ValidatedJson<T>
 where
     T: DeserializeOwned + Validate,
