@@ -11,4 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - CHANGELOG.md.
 
+### Changed
+
+- Bump redis to v0.28
+
 [unreleased]: https://github.com/4lkaid/axum-kit/compare/v0.5.0...HEAD
