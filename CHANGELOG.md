@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1] - 2025-01-08
+
 ### Added
 
 - CHANGELOG.md.
@@ -15,4 +17,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bump redis to v0.28
 
-[unreleased]: https://github.com/4lkaid/axum-kit/compare/v0.5.0...HEAD
+[unreleased]: https://github.com/4lkaid/axum-kit/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/4lkaid/axum-kit/compare/v0.5.0...v0.5.1

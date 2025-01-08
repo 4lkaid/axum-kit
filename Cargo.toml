@@ -1,6 +1,6 @@
 [package]
 name = "axum-kit"
-version = "0.5.0"
+version = "0.5.1"
 authors = ["4lkaid <4lkaid@gmail.com>"]
 categories = ["web-programming::http-server", "database"]
 keywords = ["axum", "sqlx", "redis"]
