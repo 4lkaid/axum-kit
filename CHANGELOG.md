@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added `DEFAULT_ERROR_LEVEL` and `DEFAULT_MESSAGE_LEVEL` constants for unified log level configuration.
+- Added `event_dynamic_lvl!` macro to support dynamic log level-based logging.
+
+### Changed
+
+- Moved the definition of `DEFAULT_MESSAGE_LEVEL` from `trace.rs` to `mod.rs` for centralized management.
+- Added a `level` field to `TraceBodyLayer` and `TraceBody` to support custom log levels.
+- Modified the `collect_and_log` function to support dynamic log level-based logging.
+
+### Fixed
+
+- Fixed the implementation of the `trace_body` function to return `TraceBodyLayer::default()`.
+
 ## [0.5.1] - 2025-01-08
 
 ### Added
@@ -15,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Bump redis to v0.28
+- Bump redis to v0.28.
 
 [unreleased]: https://github.com/4lkaid/axum-kit/compare/v0.5.1...HEAD
 [0.5.1]: https://github.com/4lkaid/axum-kit/compare/v0.5.0...v0.5.1

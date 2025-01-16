@@ -1,4 +1,4 @@
-use super::{DIRECT_CONNECT_IP, X_FORWARDED_FOR, X_REAL_IP, X_REQUEST_ID};
+use super::{DEFAULT_MESSAGE_LEVEL, DIRECT_CONNECT_IP, X_FORWARDED_FOR, X_REAL_IP, X_REQUEST_ID};
 use axum::{extract::Request, http::HeaderName};
 use std::net::SocketAddr;
 use tower_http::{
@@ -6,8 +6,6 @@ use tower_http::{
     trace::{MakeSpan, TraceLayer},
 };
 use tracing::{Level, Span};
-
-const DEFAULT_MESSAGE_LEVEL: Level = Level::DEBUG;
 
 #[derive(Debug, Clone)]
 pub struct CustomMakeSpan {
