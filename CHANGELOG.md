@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.2] - 2025-01-16
+
 ### Added
 
 - Added `DEFAULT_ERROR_LEVEL` and `DEFAULT_MESSAGE_LEVEL` constants for unified log level configuration.
@@ -32,5 +34,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bump redis to v0.28.
 
-[unreleased]: https://github.com/4lkaid/axum-kit/compare/v0.5.1...HEAD
+[unreleased]: https://github.com/4lkaid/axum-kit/compare/v0.5.2...HEAD
+[0.5.2]: https://github.com/4lkaid/axum-kit/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/4lkaid/axum-kit/compare/v0.5.0...v0.5.1
