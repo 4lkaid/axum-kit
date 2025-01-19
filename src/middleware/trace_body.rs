@@ -7,7 +7,7 @@ use axum::{
 use futures_util::future::BoxFuture;
 use http_body_util::BodyExt;
 use std::task::{Context, Poll};
-use tower::{Layer, Service};
+use tower::{layer::util::Identity, util::Either, Layer, Service};
 use tracing::Level;
 
 macro_rules! event_dynamic_lvl {
@@ -145,6 +145,10 @@ where
     Ok(bytes)
 }
 
-pub fn trace_body() -> TraceBodyLayer {
-    TraceBodyLayer::default()
+pub fn trace_body() -> Either<TraceBodyLayer, Identity> {
+    if tracing::level_filters::LevelFilter::current() >= DEFAULT_MESSAGE_LEVEL {
+        Either::Left(TraceBodyLayer::default())
+    } else {
+        Either::Right(Identity::default())
+    }
 }

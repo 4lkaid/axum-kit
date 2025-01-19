@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Replaced `with_max_level` with `EnvFilter`.
+- **Breaking**: `Application::default` no longer takes `router`. Use `with_router`.
+- **Breaking**: `trace_body` now returns `Either<TraceBodyLayer, Identity>`.
 
 ## [0.5.2] - 2025-01-16
 

@@ -111,8 +111,8 @@ use anyhow::Result;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let router = route::init();
-    let _worker_guard = axum_kit::bootstrap::Application::default("config.toml", router)?
+    let _worker_guard = axum_kit::bootstrap::Application::default("config.toml")?
+        .with_router(route::init)
         .before_run(|| {
             tokio::spawn(async move {
                 println!("Running pre-run initialization tasks...");
