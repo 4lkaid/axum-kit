@@ -4,9 +4,7 @@ use std::io::Write;
 use tracing::Level;
 use tracing_appender::non_blocking::WorkerGuard;
 use tracing_subscriber::{
-    fmt::{time::ChronoLocal, writer::MakeWriterExt},
-    layer::SubscriberExt,
-    util::SubscriberInitExt,
+    fmt::time::ChronoLocal, layer::SubscriberExt, util::SubscriberInitExt, EnvFilter,
 };
 
 #[derive(Debug, Deserialize)]
@@ -64,10 +62,17 @@ pub fn init(config: &LoggerConfig) -> Result<WorkerGuard> {
         LogWriter::Stdout => (Box::new(std::io::stdout()), true),
     };
     let (non_blocking, worker_guard) = tracing_appender::non_blocking(writer);
+
+    let filter =
+        EnvFilter::from_default_env().add_directive(config.level.to_tracing_level().into());
+
     let layer = tracing_subscriber::fmt::layer()
         .with_ansi(ansi)
         .with_timer(ChronoLocal::new("%Y-%m-%d %H:%M:%S".to_string()))
-        .with_writer(non_blocking.with_max_level(config.level.to_tracing_level()));
-    tracing_subscriber::registry().with(layer).init();
+        .with_writer(non_blocking);
+    tracing_subscriber::registry()
+        .with(filter)
+        .with(layer)
+        .init();
     Ok(worker_guard)
 }

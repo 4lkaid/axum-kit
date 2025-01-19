@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added `env-filter` feature to `tracing-subscriber`.
+
+### Changed
+
+- Replaced `with_max_level` with `EnvFilter`.
+
 ## [0.5.2] - 2025-01-16
 
 ### Added
