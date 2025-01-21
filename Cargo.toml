@@ -5,7 +5,7 @@ authors = ["4lkaid <4lkaid@gmail.com>"]
 categories = ["web-programming::http-server", "database"]
 keywords = ["axum", "sqlx", "redis"]
 edition = "2021"
-rust-version = "1.75"
+rust-version = "1.81"
 license = "MIT"
 description = "Streamline the integration and usage of Axum with SQLx and Redis"
 homepage = "https://github.com/4lkaid/axum-kit"
@@ -45,7 +45,7 @@ tracing-appender = { package = "tracing-appender-plus", version = "0.2", feature
     "local-time",
 ] }
 tracing-subscriber = { version = "0.3", features = ["chrono", "env-filter"] }
-validator = { version = "0.19", features = ["derive"] }
+validator = { version = "0.20", features = ["derive"] }
 
 [dev-dependencies]
 tokio = { version = "1", features = ["full"] }
