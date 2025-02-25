@@ -44,9 +44,9 @@ file_name_prefix = "axum_kit.log"
 url = "postgres://postgres:@127.0.0.1:5432/postgres"
 max_connections = 10
 min_connections = 1
-acquire_timeout = 30
-idle_timeout = 600
-max_lifetime = 1800
+acquire_timeout = 30  # seconds
+idle_timeout = 600    # seconds
+max_lifetime = 1800   # seconds
 
 [redis]
 url = "redis://127.0.0.1:6379"
