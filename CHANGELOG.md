@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.3] - 2025-02-25
+
 ### Added
 
 - Added `bb8-redis` as an optional dependency to support Redis connection pooling.
@@ -70,7 +72,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bump redis to v0.28.
 
-[unreleased]: https://github.com/4lkaid/axum-kit/compare/v0.6.2...HEAD
+[unreleased]: https://github.com/4lkaid/axum-kit/compare/v0.6.3...HEAD
+[0.6.3]: https://github.com/4lkaid/axum-kit/compare/v0.6.2...v0.6.3
 [0.6.2]: https://github.com/4lkaid/axum-kit/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/4lkaid/axum-kit/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/4lkaid/axum-kit/compare/v0.5.2...v0.6.0
