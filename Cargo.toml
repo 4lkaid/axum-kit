@@ -16,16 +16,17 @@ exclude = ["examples/*", ".github/*"]
 [features]
 default = []
 postgres = ["dep:sqlx", "dep:iana-time-zone"]
-redis = ["dep:redis"]
+redis = ["dep:redis", "dep:bb8-redis"]
 
 [dependencies]
 anyhow = "1"
 axum = "0.8"
+bb8-redis = { version = "0.21", optional = true }
 config = "0.15"
 futures-util = "0.3"
 http-body-util = "0.1"
 iana-time-zone = { version = "0.1", optional = true }
-redis = { version = "0.29", features = ["tokio-comp"], optional = true }
+redis = { version = "0.29", optional = true }
 serde = { version = "1", features = ["derive"] }
 sqlx = { version = "0.8", features = [
     "postgres",

@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added `bb8-redis` as an optional dependency to support Redis connection pooling.
+
+### Changed
+
+- Updated `redis` dependency to remove the `tokio-comp` feature, as it is no longer needed.
+- Refactored Redis connection management to use `bb8::Pool` and `RedisConnectionManager`.
+- Replaced `OnceLock<redis::Client>` with `OnceLock<bb8::Pool<RedisConnectionManager>>`.
+- Updated `init` and `conn` functions to initialize and retrieve connections from the connection pool.
+
 ## [0.6.2] - 2025-02-17
 
 ### Changed

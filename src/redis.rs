@@ -1,4 +1,5 @@
 use anyhow::{anyhow, Result};
+use bb8_redis::{bb8, RedisConnectionManager};
 use serde::Deserialize;
 use std::sync::OnceLock;
 
@@ -7,20 +8,20 @@ pub struct RedisConfig {
     pub url: String,
 }
 
-static REDIS: OnceLock<redis::Client> = OnceLock::new();
+static REDIS_POOL: OnceLock<bb8::Pool<RedisConnectionManager>> = OnceLock::new();
 
 pub async fn init(config: &RedisConfig) -> Result<()> {
-    let client = redis::Client::open(config.url.as_str())?;
-    client.get_multiplexed_tokio_connection().await?;
-    REDIS
-        .set(client)
-        .map_err(|_| anyhow!("Failed to set OnceLock<redis::Client>"))
+    let manager = RedisConnectionManager::new(config.url.as_str())?;
+    let pool = bb8::Pool::builder().build(manager).await?;
+    REDIS_POOL
+        .set(pool)
+        .map_err(|_| anyhow!("Failed to set OnceLock<RedisPool>"))
 }
 
-pub async fn conn() -> Result<redis::aio::MultiplexedConnection> {
-    Ok(REDIS
+pub async fn conn() -> Result<bb8::PooledConnection<'static, RedisConnectionManager>> {
+    Ok(REDIS_POOL
         .get()
-        .ok_or_else(|| anyhow!("OnceLock<redis::Client> not initialized"))?
-        .get_multiplexed_tokio_connection()
+        .ok_or_else(|| anyhow!("OnceLock<RedisPool> not initialized"))?
+        .get()
         .await?)
 }
