@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Bump redis to v0.30.
+
+### Removed
+
+- Removed `bb8-redis` dependency (replaced with `bb8` feature from `redis` crate).
+
 ## [0.6.3] - 2025-02-25
 
 ### Added
