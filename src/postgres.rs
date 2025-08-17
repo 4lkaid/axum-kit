@@ -14,20 +14,18 @@ pub struct PostgresConfig {
 }
 
 static PG_POOL: OnceLock<PgPool> = OnceLock::new();
-static LOCAL_TIMEZONE: OnceLock<String> = OnceLock::new();
+static PG_TIMEZONE: OnceLock<String> = OnceLock::new();
 
 pub async fn init(config: &PostgresConfig) -> Result<()> {
-    let local_timezone = iana_time_zone::get_timezone().unwrap_or_else(|_| "UTC".to_string());
-    LOCAL_TIMEZONE
-        .set(local_timezone)
-        .map_err(|_| anyhow::anyhow!("Failed to set LOCAL_TIMEZONE"))?;
+    let tz = iana_time_zone::get_timezone().unwrap_or_else(|_| "UTC".to_string());
+    PG_TIMEZONE
+        .set(tz)
+        .map_err(|_| anyhow::anyhow!("Failed to set PG_TIMEZONE"))?;
     let pool = PgPoolOptions::new()
         .after_connect(|conn, _meta| {
             Box::pin(async move {
-                conn.execute(
-                    format!("SET TIME ZONE '{}';", LOCAL_TIMEZONE.get().unwrap()).as_str(),
-                )
-                .await?;
+                conn.execute(format!("SET TIME ZONE '{}';", pg_session_timezone()).as_str())
+                    .await?;
                 Ok(())
             })
         })
@@ -45,4 +43,8 @@ pub async fn init(config: &PostgresConfig) -> Result<()> {
 
 pub fn conn() -> &'static PgPool {
     PG_POOL.get().expect("OnceLock<PgPool> not initialized")
+}
+
+pub fn pg_session_timezone() -> &'static str {
+    PG_TIMEZONE.get().expect("PG_TIMEZONE not initialized")
 }
