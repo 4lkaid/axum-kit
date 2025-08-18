@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.7] - 2025-08-18
+
+### Added
+
+- Added `pg_session_timezone()` to access PostgreSQL session timezone.
+
+### Changed
+
+- Renamed `LOCAL_TIMEZONE` to `PG_TIMEZONE` for clearer association with PostgreSQL.
+
 ## [0.6.6] - 2025-06-17
 
 ### Changed
@@ -94,7 +104,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bump redis to v0.28.
 
-[unreleased]: https://github.com/4lkaid/axum-kit/compare/v0.6.6...HEAD
+[unreleased]: https://github.com/4lkaid/axum-kit/compare/v0.6.7...HEAD
+[0.6.7]: https://github.com/4lkaid/axum-kit/compare/v0.6.6...v0.6.7
 [0.6.6]: https://github.com/4lkaid/axum-kit/compare/v0.6.5...v0.6.6
 [0.6.5]: https://github.com/4lkaid/axum-kit/compare/v0.6.4...v0.6.5
 [0.6.4]: https://github.com/4lkaid/axum-kit/compare/v0.6.3...v0.6.4
